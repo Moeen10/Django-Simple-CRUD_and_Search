@@ -1,10 +1,13 @@
 {% extends 'Common/base.html' %}
 
 {% block start %}
+
+
+
 <p>This is the Recepie Page.</p>
-<div class="container mt-5">
+<div class="container m-5">
     
-<form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
+<form class="col-6 mx-auto card p-3 shadow-lg " method="post" enctype="multipart/form-data">
   {% csrf_token %}
     <h2>Add Recepie</h2>
     <div class="mb-3">

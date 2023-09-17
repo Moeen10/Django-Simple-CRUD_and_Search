@@ -16,6 +16,9 @@ urlpatterns = [
     path('recepies/', recepies, name="recepies"),
     path('recepies/delete_recepies/<id>/', delete_recepie, name="delete_recepie"),
     path('recepies/update_recepies/<id>/', update_recepie, name="updatete_recepie"),
+    path('login/', loginPage, name="login"),
+    path('register/', registration, name="register"),
+    path('logout/', logout_page, name="logout"),
 ]
 
 
