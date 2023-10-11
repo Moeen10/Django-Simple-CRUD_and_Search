@@ -1,0 +1,65 @@
+{% extends 'Common/base.html' %}
+
+{% block start %}
+
+
+
+<p>This is the shed Page.</p>
+<div class="container m-5">
+    <h1>{{context}}</h1>
+
+
+    <form class="col-6 mx-auto card p-3 shadow-lg " method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+        <h2>Shed Registration</h2>
+
+        <div class="mb-3">
+          <label for="shedInput" class="form-label">Shed Name</label>
+          <input name="shed_name" type="text" class="form-control" id="give shed name" aria-describedby="ShedName" required>
+          <div id="shedID" class="form-text">Give Shed Name</div>
+        </div> 
+
+        <div class="mb-3">
+          <label for="shedInput" class="form-label">Shed Length</label>
+          <input name="shed_length" type="number" step="any" class="form-control" id="give_shed_length" aria-describedby="ShedLength">
+          <div id="shedID" class="form-text">Give Shed Length</div>
+        </div> 
+        
+        <div class="mb-3">
+          <label for="shedInput" class="form-label">Shed Width</label>
+          <input name="shed_width" type="number" step="any" class="form-control" id="give_shed_width" aria-describedby="ShedWidth">
+          <div id="shedID" class="form-text">Give Shed Width</div>
+        </div> 
+    
+        <div class="mb-3">
+          <label for="shedInput" class="form-label">Shed Location</label>
+          <input name="shed_location" type="text" step="any" class="form-control" id="give_shed_location" aria-describedby="Shedlocation">
+          <div id="shedID" class="form-text">Give Shed Location</div>
+        </div> 
+
+        <div class="mb-3">
+          <label for="shedInput" class="form-label">Phone Number</label>
+          <input name="phoneNumber" type="number" step="any" class="form-control" id="give_shed_width" aria-describedby="phoneNumber">
+          <div id="shedID" class="form-text">Give Phone Number</div>
+        </div> 
+
+        <div class="mb-3">
+          <label for="shedInput" class="form-label">Email</label>
+          <input name="email" type="email" step="any" class="form-control" id="give_shed_width" aria-describedby="email">
+          <div id="shedID" class="form-text">Give Email</div>
+        </div> 
+
+        <div class="mb-3">
+          <label for="shedInput" class="form-label">Number of Cow</label>
+          <input name="cowNumber" type="number" step="any" class="form-control" id="give_cowNumber" aria-describedby="cowNumber">
+          <div id="shedID" class="form-text">Give Total Cow Number</div>
+        </div> 
+
+
+        <button type="submit" class="btn btn-success">Add shed</button>
+      </form>
+    
+    <hr>
+</div>
+
+{% endblock %}

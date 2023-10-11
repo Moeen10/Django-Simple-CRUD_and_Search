@@ -3,6 +3,7 @@ from django.urls import path
 from Django_Services import settings
 from home.views import * 
 from vege.views import * 
+from shed.views import *
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 
@@ -19,6 +20,7 @@ urlpatterns = [
     path('login/', loginPage, name="login"),
     path('register/', registration, name="register"),
     path('logout/', logout_page, name="logout"),
+    path('shed_registration/', shed_registration, name = "shed_registration")
 ]
 
 
