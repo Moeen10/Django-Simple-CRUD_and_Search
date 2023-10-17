@@ -1,31 +1,25 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.contrib.auth.decorators import login_required
+from shed.forms import ShedForm
 from .models import Shed_registration
+from django.contrib import messages
 
-# Create your views here.
-
-
+@login_required(login_url='/login/')
 def shed_registration(request):
-    context = "hello"
-    if request.method == "POST":
-        data = request.POST
-        shed_name =  data.get('shed_name')
-        shed_length =  data.get('shed_length')
-        shed_width =  data.get('shed_width')
-        cowNumber =  data.get('cowNumber')
-        email =  data.get('email')
-        phoneNumber =  data.get('phoneNumber')
-        shed_location =  data.get('shed_location')
-       
-        Shed_registration.objects.create(
-            shedName =  shed_name,
-            shedLength= shed_length , 
-            shedWidth = shed_width,
-            shedLocation = shed_location,
-            phoneNumber = phoneNumber,
-            email = email,
-            number_of_cow = cowNumber,
-           )
-        
-        
+    form = ShedForm(request.POST or None)
+    
+    if request.method == 'POST':
+        if form.is_valid():
+            shed = form.save(commit=False)
+            shed.owner = request.user  
+            shed.save()
+            messages.info(request, "Shed Create Successfully") 
+            print("Shed saved successfully")
+            return redirect('shed_registration')
+            
+        else:
+            print("Form is not valid")
+    else:
+        form = ShedForm()  
 
-    return render(request,"shed_registration.html",{'context' : context})
+    return render(request, "shed_registration.html", {'form': form})

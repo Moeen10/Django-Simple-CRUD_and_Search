@@ -3,7 +3,6 @@ from django.contrib import messages
 from .models import *
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.contrib import messages
 from django.contrib.auth import authenticate , login , logout
 from django.contrib.auth.decorators import login_required
  
@@ -106,8 +105,6 @@ def registration(request):
 
 
 
-    
-
         existuser = User.objects.filter(username=username)
         print("+++++++++++++++++++++++++")
         print(existuser.exists())
@@ -123,7 +120,10 @@ def registration(request):
         user.set_password(password)
         user.save()
         messages.info(request, "Account created successfully") 
-        return redirect('/register/')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)  
+            return redirect('/recepies/')
 
     context = {
         'page': "Registration"

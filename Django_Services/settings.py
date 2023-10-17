@@ -40,7 +40,12 @@ INSTALLED_APPS = [
     'home',
     'vege',
     'shed',
+    'userAccount',
+    'cow',
+    'incentory_expense_remaining'
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -108,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dhaka'
 
 USE_I18N = True
 

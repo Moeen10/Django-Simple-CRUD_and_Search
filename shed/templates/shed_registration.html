@@ -7,8 +7,21 @@
 <p>This is the shed Page.</p>
 <div class="container m-5">
     <h1>{{context}}</h1>
-
-
+    <form method="post">
+      {% csrf_token %}
+      
+      {% if messages %}
+      <div class="alert alert-primary" role="alert" id="message-container">
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+      </div>
+   
+      {% endif %}
+      {{ form.as_p }}
+      <button type="submit">Create Shed</button>
+    </form>
+{% comment %} 
     <form class="col-6 mx-auto card p-3 shadow-lg " method="post" enctype="multipart/form-data">
       {% csrf_token %}
         <h2>Shed Registration</h2>
@@ -59,7 +72,15 @@
         <button type="submit" class="btn btn-success">Add shed</button>
       </form>
     
-    <hr>
+    <hr> {% endcomment %}
 </div>
+<script>
+  
+  setTimeout(function() {
+      document.getElementById('message-container').style.display = 'none';
+  }, 3000);
+</script>
+
 
 {% endblock %}
+
