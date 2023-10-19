@@ -1,7 +1,61 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 from shed.models import Shed_registration 
 # Create your models here.
+
+class MasterDesease(models.Model):
+    desease_name = models.CharField(max_length=100)
+    desease_description = models.TextField()
+    desease_description_bangla = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated_at = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='updated_desease_set')
+
+    def __str__(self):
+         return f"{self.desease_name}"
+    
+    class Meta:
+        db_table = 'm_desease'
+
+
+
+class MasterMedicin(models.Model):
+    desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE)
+    medicine_name = models.CharField(max_length=100)
+    medicine_details = models.TextField()
+    medicine_details_bangla = models.TextField() 
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated_at = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='updated_mastermedicine_set')
+
+    def __str__(self):
+        return f"{self.medicine_name}"
+    
+    class Meta:
+        db_table = 'm_medicine'
+
+
+class MasterVaccine(models.Model):
+    desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE)
+    vaccine_name = models.CharField(max_length=100)
+    vaccine_details = models.TextField()
+    vaccine_details_bangla = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    updated_at = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='updated_mastervaccine_set')
+
+    def __str__(self):
+        return f"{self.vaccine_name}"
+    
+    class Meta:
+        db_table = 'm_vaccine'
+
+
+
+
 class CowRegistration(models.Model):
     ORIGIN_CHOICES = (
         ('Local', 'Local'),
@@ -28,6 +82,9 @@ class CowRegistration(models.Model):
     weight = models.DecimalField(max_digits=5, decimal_places=2)
     milk_yield = models.DecimalField(max_digits=5, decimal_places=2)
     active = models.BooleanField(choices=ACTIVE_CHOICES)
+    desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE ,related_name='CowDesease')
+    medicine = models.ForeignKey(MasterMedicin, on_delete=models.CASCADE ,related_name='CowMedicine')
+    vaccine = models.ForeignKey(MasterVaccine, on_delete=models.CASCADE, related_name='CowVaccine')
     def __str__(self):
         return f"{self.cattle_id} - {self.gender}"
     
@@ -41,3 +98,5 @@ class MilkYield(models.Model):
 
         def __str__(self):
             return f"{self.cow.cattle_id} - {self.date} - {self.milk_produced} liters"
+        
+

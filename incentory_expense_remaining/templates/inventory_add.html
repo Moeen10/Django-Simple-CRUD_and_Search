@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Inventory</title>
+</head>
+<body>
+    <h1>Add Inventory</h1>
+    <form action="{% url 'inventory_add' %}" method="post">
+        {% csrf_token %}
+
+        <select name="crop_type">
+            {% for crop_type in crop_types %}
+                <option value="{{ crop_type.pk }}">{{ crop_type.name }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="number" name="crop_price_per_kg" placeholder="Crop Price Per KG">
+        <input type="number" name="crop_quantity" placeholder="Crop Quantity">
+
+        <input type="submit" value="Add Inventory">
+    </form>
+</body>
+</html>

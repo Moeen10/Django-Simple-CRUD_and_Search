@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory List</title>
+</head>
+<body>
+    <h1>Inventory List</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Crop Type</th>
+                <th>Crop Price Per KG</th>
+                <th>Crop Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inventory in inventories %}
+                <tr>
+                    <td>{{ inventory.crop_type.name }}</td>
+                    <td>{{ inventory.crop_price_per_kg }}</td>
+                    <td>{{ inventory.crop_quantity }}</td>
+                    {% comment %} <td>
+                        <a href="{% url 'inventory_update' inventory.pk %}">Update</a>
+                        <a href="{% url 'inventory_delete' inventory.pk %}">Delete</a>
+                    </td> {% endcomment %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'inventory_add' %}">Add Inventory</a>
+</body>
+</html>

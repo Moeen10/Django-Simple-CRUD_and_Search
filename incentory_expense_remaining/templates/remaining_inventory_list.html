@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Remaining Inventory List</title>
+</head>
+<body>
+    <h1>Remaining Inventory List</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Crop Type</th>
+                <th>Total Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for crop_type, total_quantity in total_quantities.items %}
+                <tr>
+                    <td>{{ crop_type }}</td>
+                    <td>{{ total_quantity }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
