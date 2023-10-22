@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from shed.models import Shed_registration 
+from django.utils import timezone
 # Create your models here.
 
 class MasterDesease(models.Model):
@@ -71,6 +72,37 @@ class CowRegistration(models.Model):
         (True , 'Yes'),
         (False , 'No'),
     )
+
+    VACCINE_DOSR = (
+
+        (0,'0'),
+        (1,'1'),
+        (2,'2'),
+        (3,'3'),
+    )
+
+    HELTH_STATUS = (
+        ("Good","Good"),
+        ("Sick","Sick"),
+        ("Natural","Natural"),
+    )
+
+    HEAT_STATUS = (
+        ("No","No"),
+        ("Yes","Yes"),
+    )
+
+    SEMEN_PUSH_STATUS = (
+        ("No","No"),
+        ("Yes","Yes"),
+    )
+
+    DELICERY_STATUS = (
+        ("No","No"),
+        ("Yes","Yes"),
+    )
+    
+
     shed = models.ForeignKey(Shed_registration, on_delete=models.CASCADE ,related_name='CowRegistration')
     cattle_id = models.CharField(max_length=10, unique=True)
     origin = models.CharField(max_length=10, choices=ORIGIN_CHOICES)
@@ -85,9 +117,35 @@ class CowRegistration(models.Model):
     desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE ,related_name='CowDesease')
     medicine = models.ForeignKey(MasterMedicin, on_delete=models.CASCADE ,related_name='CowMedicine')
     vaccine = models.ForeignKey(MasterVaccine, on_delete=models.CASCADE, related_name='CowVaccine')
+ 
+
+    helth_status = models.CharField(max_length=30 , choices = HELTH_STATUS , default="Natural")
+    current_vaccine_dose = models.DecimalField(max_digits=4, decimal_places=2 , default=0)
+    next_vaccine_dose = models.DateField(default=timezone.now)
+
+
+    provable_heat_date = models.DateField(default=timezone.now)
+    heat_status = models.CharField(max_length=10, choices=HEAT_STATUS , default=None)
+    actual_heat_date = models.DateField(default=timezone.now)
+    semen_push_status = models.CharField(max_length=10, choices=SEMEN_PUSH_STATUS , default=None)
+    pregnant_date = models.DateField(default=timezone.now)
+    delivery_status = models.CharField(max_length=10,choices=DELICERY_STATUS ,  default=None)
+    delivery_date = models.DateField(default=timezone.now)
+
+
     def __str__(self):
         return f"{self.cattle_id} - {self.gender}"
     
+
+
+class Sick_Cow(models.Model):
+    cow_desease = models.ForeignKey(MasterDesease,on_delete=models.PROTECT , related_name='SickCowDesease')
+    cow_id = models.ForeignKey(CowRegistration, on_delete=models.PROTECT , related_name='SeickCowID' )
+
+
+    def __str__(self):
+        return f"Sick Cow Id : {self.cow_id} ans Desease is : {self.cow_desease.desease_name}"
+
 
 
 
@@ -99,4 +157,8 @@ class MilkYield(models.Model):
         def __str__(self):
             return f"{self.cow.cattle_id} - {self.date} - {self.milk_produced} liters"
         
+
+
+
+
 

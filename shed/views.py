@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from shed.forms import ShedForm
 from .models import Shed_registration
 from django.contrib import messages
+from .serializers import ShedRegistrationSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 @login_required(login_url='/login/')
 def shed_registration(request):
@@ -23,3 +26,12 @@ def shed_registration(request):
         form = ShedForm()  
 
     return render(request, "shed_registration.html", {'form': form})
+
+
+
+@api_view(['GET'])
+def list_sheds(request):
+    sheds = Shed_registration.objects.all()
+    serializer = ShedRegistrationSerializer(sheds, many=True)
+    return Response(serializer.data)
+

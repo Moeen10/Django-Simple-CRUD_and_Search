@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'shed',
     'userAccount',
     'cow',
-    'incentory_expense_remaining'
+    'incentory_expense_remaining',
+    'rest_framework'
 ]
 
 

@@ -19,6 +19,13 @@ class MasterVaccineAdmin(admin.ModelAdmin):
   desease.short_description = 'Desease'
 
 
+@admin.register(MasterMedicin)
+class MasterMedicinAdmin(admin.ModelAdmin):
+  list_display = ('desease','medicine_name','medicine_details')
+  def desease(self,obj):
+    return obj.desease.desease_name
+  desease.short_description = 'Desease'
+
 
 
 
@@ -35,6 +42,18 @@ class CowRegistrationAdmin(admin.ModelAdmin):
         'weight',
         'milk_yield'
     ]
+
+
+
+@admin.register(Sick_Cow)
+class Sick_CowAdmin(admin.ModelAdmin):
+   list_display = ( 'cow_desease' , 'cow_id')
+   def cow_desease(self,obj):
+    return obj.cow_desease.desease_name
+   cow_desease.short_description = 'Desease Name'
+
+
+    
 
 # class CowRegistrationAdminForm(ModelForm):
 #     class Meta:
