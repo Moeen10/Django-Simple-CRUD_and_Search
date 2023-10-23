@@ -24,8 +24,10 @@ urlpatterns = [
     path('logout/', logout_page, name="logout"),
     path('shed_registration/', shed_registration, name = "shed_registration"),
     path('cow_registration/', cow_registration, name = "cow_registration"),
+    path('allCow/', allCow, name = "allCow"),
     path('api/sheds/', list_sheds, name='shed-list'),
     path('inventory_add/', inventory_add, name = "inventory_add"),
+    path('allAddInventory/', allAddInventory, name = "allAddInventory"),
     path('inventory_list/', inventory_list, name = "inventory_list"),
     path('remaining_inventory_list/', remaining_inventory_list, name = "remaining_inventory_list"),
 ]

@@ -6,20 +6,24 @@ from django.contrib import messages
 from .serializers import ShedRegistrationSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
+from rest_framework import status
 @login_required(login_url='/login/')
+@api_view(['POST'])
 def shed_registration(request):
     form = ShedForm(request.POST or None)
     
     if request.method == 'POST':
+        serializer = ShedRegistrationSerializer(data=request.data)
         if form.is_valid():
             shed = form.save(commit=False)
             shed.owner = request.user  
             shed.save()
             messages.info(request, "Shed Create Successfully") 
             print("Shed saved successfully")
+            serializer = ShedRegistrationSerializer(shed)  # Serialize the saved object
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
             return redirect('shed_registration')
-            
+                
         else:
             print("Form is not valid")
     else:

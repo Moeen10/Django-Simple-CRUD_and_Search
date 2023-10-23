@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from .models import Inventory, MasterInventory, RemainingInventory
+from .serializers import InventorySerializer
+from rest_framework.renderers import JSONRenderer
+from django.contrib.auth.decorators import login_required
 
 def inventory_list(request):
     inventories = Inventory.objects.all()
     return render(request, 'inventory_list.html', {'inventories': inventories})
 
 
-
+@login_required(login_url='/login/')
 def inventory_add(request):
     if request.method == 'POST':
         crop_type_pk = request.POST.get('crop_type')
@@ -110,3 +113,11 @@ def remaining_inventory_list(request):
 
     # Pass the total quantities dictionary to the template.
     return render(request, 'remaining_inventory_list.html', {'total_quantities': total_quantities})
+
+
+def allAddInventory(request):
+    inventoryList = Inventory.objects.filter(add_or_remove="Add") 
+    serializer = InventorySerializer(inventoryList, many = True)
+
+    json_data = JSONRenderer().render(serializer.data)
+    return HttpResponse(json_data, content_type = 'application/json')

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User 
+from django.utils import timezone
 # Model to track the inventory of crops
 
 
@@ -25,9 +26,10 @@ class MasterInventory(models.Model):
 class Inventory(models.Model):
     crop_type = models.ForeignKey(MasterInventory, on_delete=models.CASCADE)
     add_or_remove = models.CharField(max_length=10)
-    total_crops =  models.DecimalField(max_digits=10, decimal_places=2,default=0, )
     crop_price_per_kg = models.DecimalField(max_digits=10, decimal_places=2)
     crop_quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    total_crops =  models.DecimalField(max_digits=10, decimal_places=2,default=0, )
+    created_at  = models.DateField(default=timezone.now)
 
     def __str__(self):
         return self.crop_type.name + f'({self.crop_type.name_bangla})'
