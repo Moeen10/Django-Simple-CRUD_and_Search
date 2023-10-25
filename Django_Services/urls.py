@@ -30,6 +30,8 @@ urlpatterns = [
     path('allAddInventory/', allAddInventory, name = "allAddInventory"),
     path('inventory_list/', inventory_list, name = "inventory_list"),
     path('remaining_inventory_list/', remaining_inventory_list, name = "remaining_inventory_list"),
+    path('asche/', FormDataView.as_view(), name = "remaining_inventory_list"),
+    path('alldesease/', MasterDeseaseList.as_view(), name = "all_desease"),
 ]
 
 

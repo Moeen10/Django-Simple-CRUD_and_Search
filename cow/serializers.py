@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CowRegistration
+from .models import *
 
 class AllCowSerializer(serializers.ModelSerializer):
     crop_type_name = serializers.SerializerMethodField()
@@ -12,4 +12,7 @@ class AllCowSerializer(serializers.ModelSerializer):
 
 
     
-     
+class MasterDeseaseSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = MasterDesease
+            fields = ("id","desease_name","desease_description","desease_description_bangla")

@@ -15,3 +15,14 @@ class Shed_registration(models.Model):
     def __str__(self) -> str:
         return f"Shed Name -  {self.shedName}  ||  Cow Number - {self.number_of_cow}  ||  User Name - {self.owner.username}"
     
+
+
+
+class FormData(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.IntegerField()
+
+    
+    def __str__(self) -> str:
+        return f"{self.name}"
+    
