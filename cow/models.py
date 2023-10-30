@@ -103,10 +103,10 @@ class CowRegistration(models.Model):
     )
     
 
-    shed = models.ForeignKey(Shed_registration, on_delete=models.CASCADE ,related_name='CowRegistration')
+    shed = models.ForeignKey(Shed_registration, on_delete=models.CASCADE ,related_name='CowRegistration',default=1)
     cattle_id = models.CharField(max_length=10, unique=True)
-    origin = models.CharField(max_length=10, choices=ORIGIN_CHOICES)
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    origin = models.CharField(max_length=10,)
+    gender = models.CharField(max_length=10,)
     age = models.PositiveIntegerField()
     date_of_birth = models.DateField()
     color = models.CharField(max_length=50)
@@ -114,22 +114,22 @@ class CowRegistration(models.Model):
     weight = models.DecimalField(max_digits=5, decimal_places=2)
     milk_yield = models.DecimalField(max_digits=5, decimal_places=2)
     active = models.BooleanField(choices=ACTIVE_CHOICES)
-    desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE ,related_name='CowDesease')
-    medicine = models.ForeignKey(MasterMedicin, on_delete=models.CASCADE ,related_name='CowMedicine')
-    vaccine = models.ForeignKey(MasterVaccine, on_delete=models.CASCADE, related_name='CowVaccine')
+    desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE ,related_name='CowDesease' ,null=True)
+    medicine = models.ForeignKey(MasterMedicin, on_delete=models.CASCADE ,related_name='CowMedicine',null=True)
+    vaccine = models.ForeignKey(MasterVaccine, on_delete=models.CASCADE, related_name='CowVaccine',null=True)
  
 
-    helth_status = models.CharField(max_length=30 , choices = HELTH_STATUS , default="Natural")
+    helth_status = models.CharField(max_length=30 , choices = HELTH_STATUS , default="Natural", )
     current_vaccine_dose = models.DecimalField(max_digits=4, decimal_places=2 , default=0)
     next_vaccine_dose = models.DateField(default=timezone.now)
 
 
     provable_heat_date = models.DateField(default=timezone.now)
-    heat_status = models.CharField(max_length=10, choices=HEAT_STATUS , default=None)
+    heat_status = models.CharField(max_length=10, choices=HEAT_STATUS , default="No")
     actual_heat_date = models.DateField(default=timezone.now)
-    semen_push_status = models.CharField(max_length=10, choices=SEMEN_PUSH_STATUS , default=None)
+    semen_push_status = models.CharField(max_length=10, choices=SEMEN_PUSH_STATUS , default="No")
     pregnant_date = models.DateField(default=timezone.now)
-    delivery_status = models.CharField(max_length=10,choices=DELICERY_STATUS ,  default=None)
+    delivery_status = models.CharField(max_length=10,choices=DELICERY_STATUS ,  default="No")
     delivery_date = models.DateField(default=timezone.now)
 
 
@@ -156,9 +156,3 @@ class MilkYield(models.Model):
 
         def __str__(self):
             return f"{self.cow.cattle_id} - {self.date} - {self.milk_produced} liters"
-        
-
-
-
-
-
