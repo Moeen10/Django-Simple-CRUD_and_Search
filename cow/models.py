@@ -114,9 +114,9 @@ class CowRegistration(models.Model):
     weight = models.DecimalField(max_digits=5, decimal_places=2)
     milk_yield = models.DecimalField(max_digits=5, decimal_places=2)
     active = models.BooleanField(choices=ACTIVE_CHOICES)
-    desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE ,related_name='CowDesease' ,null=True)
-    medicine = models.ForeignKey(MasterMedicin, on_delete=models.CASCADE ,related_name='CowMedicine',null=True)
-    vaccine = models.ForeignKey(MasterVaccine, on_delete=models.CASCADE, related_name='CowVaccine',null=True)
+    desease = models.ManyToManyField(MasterDesease ,related_name='CowDesease' ,blank=True)
+    medicine = models.ManyToManyField(MasterMedicin,related_name='CowMedicine',blank=True)
+    vaccine = models.ManyToManyField(MasterVaccine, related_name='CowVaccine',blank=True)
  
 
     helth_status = models.CharField(max_length=30 , choices = HELTH_STATUS , default="Natural", )

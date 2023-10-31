@@ -104,7 +104,22 @@ class CowRegistrationView(APIView):
         print(type(age))
         if serializer.is_valid():
             print("VALID");
-            # Create an instance of CowRegistration with the deserialized data
+
+            # Handle Dease 
+            allDesease_names = request.data.get('desease') 
+            postDesease = [MasterDesease.objects.get(desease_name=desease_name) for desease_name in allDesease_names]
+            print("Dease : + ",postDesease)
+
+            # Handle Medicine
+            allMedicine_names = request.data.get('medicine') 
+            postMedicine = [MasterMedicin.objects.get(medicine_name=medicine_name) for medicine_name in allMedicine_names]
+            print("Medicine : + ",postMedicine)
+
+            # Handle Vaccine
+            allVaccine_names = request.data.get('vaccine') 
+            postVaccine = [MasterVaccine.objects.get(vaccine_name=vaccine_name) for vaccine_name in allVaccine_names]
+            print("Vaccine : + ",postVaccine)
+
             cow_registration = CowRegistration(
                 cattle_id=request.data.get('cattle_id'),
                 age=request.data.get('age'),
@@ -124,12 +139,15 @@ class CowRegistrationView(APIView):
                 pregnant_date = request.data.get('pregnant_date'),
                 delivery_status = request.data.get('delivery_status'),
                 delivery_date = request.data.get('delivery_date'),
-
                 # Add more fields as needed
             )
             # Save the instance to the database
 
             cow_registration.save()
+            print("KIRRRRRRRRRRRR")
+            cow_registration.desease.set(postDesease)
+            cow_registration.medicine.set(postMedicine)
+            cow_registration.vaccine.set(postVaccine)
             print("SAVE HOISE")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
