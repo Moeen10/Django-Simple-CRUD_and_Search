@@ -128,7 +128,8 @@ class CowRegistrationView(APIView):
                 # Add more fields as needed
             )
             # Save the instance to the database
-            cow_registration.save()
 
+            cow_registration.save()
+            print("SAVE HOISE")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
