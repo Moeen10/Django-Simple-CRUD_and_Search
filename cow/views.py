@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect,HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.exceptions import ObjectDoesNotExist
 
 def cow_registration(request):
     if request.method == 'POST':
@@ -25,12 +26,81 @@ def cow_registration(request):
     context = {'form': form}
     return render(request, 'addCow.html', context)
 
-def allCow(request):
-    allCowList = CowRegistration.objects.all() 
-    serializer = AllCowSerializer(allCowList, many = True)
 
-    json_data = JSONRenderer().render(serializer.data)
-    return HttpResponse(json_data, content_type = 'application/json')
+
+class CowRegistrationView(APIView):
+    def post(self, request, format=None):
+        allDesease = request.data.get('desease') 
+        print(allDesease)
+        serializer = CowRegistrationSerializer(data=request.data)
+        age  = request.data.get('age')
+        age = int(age)
+        print("88888888888888888888888888888")
+        hstatus  = request.data.get('helth_status')
+
+
+        if serializer.is_valid():
+            print("VALID")
+
+            # Handle Dease 
+            allDesease = request.data.get('desease') 
+            print(allDesease)
+
+            # Handle Medicine
+            allMedicine = request.data.get('medicine') 
+            print(allMedicine)
+           
+            # Handle Vaccine
+            allVaccine = request.data.get('vaccine') 
+            print(allVaccine)
+           
+
+            cow_registration = CowRegistration(
+                cattle_id=request.data.get('cattle_id'),
+                purchase_date=request.data.get('cattle_id'),
+                
+                age=request.data.get('age'),
+                color=request.data.get('color'),
+                date_of_birth = request.data.get('date_of_birth'),
+                breeding_rate = int(request.data.get('breeding_rate')),
+                weight = Decimal(request.data.get('weight')),
+                milk_yield = Decimal(request.data.get('milk_yield')),
+                active = True,
+                origin = request.data.get('origin'),
+                gender = request.data.get('gender'),
+                helth_status = request.data.get('helth_status'),
+                provable_heat_date = request.data.get('provable_heat_date'),
+                heat_status = request.data.get('heat_status'),
+                actual_heat_date = request.data.get('actual_heat_date'),
+                semen_push_status = request.data.get('semen_push_status'),
+                pregnant_date = request.data.get('pregnant_date'),
+                delivery_status = request.data.get('delivery_status'),
+                delivery_date = request.data.get('delivery_date'),
+                # Add more fields as needed
+            )
+            # Save the instance to the database
+
+            cow_registration.save()
+            print("KIRRRRRRRRRRRR")
+            cow_registration.desease.set(allDesease)
+            cow_registration.medicine.set(allMedicine)
+            cow_registration.vaccine.set(allVaccine)
+            print("SAVE HOISE")
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+# def allCow(request):
+#     allCowList = CowRegistration.objects.all() 
+#     serializer = AllCowSerializer(allCowList, many = True)
+
+#     json_data = JSONRenderer().render(serializer.data)
+#     return HttpResponse(json_data, content_type = 'application/json')
 
 
 class MasterDeseaseList(APIView):
@@ -66,15 +136,6 @@ class MasterVaccineList(APIView):
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class MasterMedicineList(APIView):
-#     def get(self, request):
-#         medicine = MasterMedicin.objects.all()
-#         print("de", medicine)
-#         serializer = MasterVaccineSerializer(medicine, many=True)
-#         print("ssde", serializer.data)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-
 class MasterMedicineList(APIView):
     def get(self, request):
         medicine = MasterMedicin.objects.all()
@@ -84,70 +145,22 @@ class MasterMedicineList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
  
 
-# class CowRegistrationView(APIView):
-#     def post(self, request, format=None):
-#         print(request.data)
-#         serializer = CowRegistrationSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CowProfile(APIView):
+    def get(self, request):
+        try:
+            cows = CowRegistration.objects.all()
+            serializer = CowRegistrationSerializer(cows, many=True)
+        except ObjectDoesNotExist:
+        # Handle the exception here, and set a specific error message
+            error_message = "The object does not exist."
+            return HttpResponse(error_message, status=404)  # 404 Not Found
+        except Exception as e:
+        # Handle other exceptions as needed, and set appropriate status code and message
+            error_message = "An error occurred: " + str(e)
+            return HttpResponse(error_message, status=500) 
+        
+            
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
 
-class CowRegistrationView(APIView):
-    def post(self, request, format=None):
-        print(request.data)
-        serializer = CowRegistrationSerializer(data=request.data)
-        age  = request.data.get('age')
-        age = int(age)
-        print("88888888888888888888888888888")
-        print(type(age))
-        if serializer.is_valid():
-            print("VALID");
-
-            # Handle Dease 
-            allDesease_names = request.data.get('desease') 
-            postDesease = [MasterDesease.objects.get(desease_name=desease_name) for desease_name in allDesease_names]
-            print("Dease : + ",postDesease)
-
-            # Handle Medicine
-            allMedicine_names = request.data.get('medicine') 
-            postMedicine = [MasterMedicin.objects.get(medicine_name=medicine_name) for medicine_name in allMedicine_names]
-            print("Medicine : + ",postMedicine)
-
-            # Handle Vaccine
-            allVaccine_names = request.data.get('vaccine') 
-            postVaccine = [MasterVaccine.objects.get(vaccine_name=vaccine_name) for vaccine_name in allVaccine_names]
-            print("Vaccine : + ",postVaccine)
-
-            cow_registration = CowRegistration(
-                cattle_id=request.data.get('cattle_id'),
-                age=request.data.get('age'),
-                color=request.data.get('color'),
-                date_of_birth = request.data.get('date_of_birth'),
-                breeding_rate = int(request.data.get('breeding_rate')),
-                weight = Decimal(request.data.get('weight')),
-                milk_yield = Decimal(request.data.get('milk_yield')),
-                active = True,
-                origin = request.data.get('origin'),
-                gender = request.data.get('gender'),
-                helth_status = request.data.get('helth_status'),
-                provable_heat_date = request.data.get('provable_heat_date'),
-                heat_status = request.data.get('heat_status'),
-                actual_heat_date = request.data.get('actual_heat_date'),
-                semen_push_status = request.data.get('semen_push_status'),
-                pregnant_date = request.data.get('pregnant_date'),
-                delivery_status = request.data.get('delivery_status'),
-                delivery_date = request.data.get('delivery_date'),
-                # Add more fields as needed
-            )
-            # Save the instance to the database
-
-            cow_registration.save()
-            print("KIRRRRRRRRRRRR")
-            cow_registration.desease.set(postDesease)
-            cow_registration.medicine.set(postMedicine)
-            cow_registration.vaccine.set(postVaccine)
-            print("SAVE HOISE")
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

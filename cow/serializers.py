@@ -29,11 +29,17 @@ class MasterMedicinSerializer(serializers.ModelSerializer):
             fields = ("id" ,"medicine_name","medicine_details", "medicine_details_bangla")
 
 
+class DisplayAllCowSerializer(serializers.ModelSerializer):
+     class Meta:
+          model:CowRegistration
+          fields = '__all__'
+
+
 class CowRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CowRegistration
-        # fields = '__all__'
-        fields = ("cattle_id","age","color","date_of_birth")
+        fields = '__all__'
+        # fields = ("cattle_id","age","color","date_of_birth")
 
     #     shed = models.ForeignKey(Shed_registration, on_delete=models.CASCADE ,related_name='CowRegistration')
     # cattle_id = models.CharField(max_length=10, unique=True)

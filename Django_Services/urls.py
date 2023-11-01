@@ -29,7 +29,9 @@ urlpatterns = [
 
 #    Cow Profile related apis
 
-    path('allCow/', allCow, name = "allCow"),
+    # path('allCow/', allCow, name = "allCow"),
+    path('reqiestForAllCowProfile/', CowProfile.as_view(), name = "reqiestForAllCowProfile"),
+
 
 #   Shed related api
     
