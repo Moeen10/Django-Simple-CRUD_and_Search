@@ -104,7 +104,7 @@ class CowRegistration(models.Model):
     
 
     shed = models.ForeignKey(Shed_registration, on_delete=models.CASCADE ,related_name='CowRegistration',default=1)
-    purchase_date = models.DateField( null=True)
+    purchase_date = models.DateField(default=timezone.now)
     cattle_id = models.CharField(max_length=10)
     origin = models.CharField(max_length=10,)
     gender = models.CharField(max_length=10,)

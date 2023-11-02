@@ -36,22 +36,14 @@ class DisplayAllCowSerializer(serializers.ModelSerializer):
 
 
 class CowRegistrationSerializer(serializers.ModelSerializer):
+    
+    # desease_name = serializers.ListSerializer(child=serializers.CharField())
+    desease = serializers.StringRelatedField(many=True)
+    medicine = serializers.StringRelatedField(many=True)
+    vaccine = serializers.StringRelatedField(many=True)
     class Meta:
         model = CowRegistration
         fields = '__all__'
-        # fields = ("cattle_id","age","color","date_of_birth")
 
-    #     shed = models.ForeignKey(Shed_registration, on_delete=models.CASCADE ,related_name='CowRegistration')
-    # cattle_id = models.CharField(max_length=10, unique=True)
-    # origin = models.CharField(max_length=10, choices=ORIGIN_CHOICES)
-    # gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
-    # age = models.PositiveIntegerField()
-    # date_of_birth = models.DateField()
-    # color = models.CharField(max_length=50)
-    # breeding_rate = models.DecimalField(max_digits=4, decimal_places=2)
-    # weight = models.DecimalField(max_digits=5, decimal_places=2)
-    # milk_yield = models.DecimalField(max_digits=5, decimal_places=2)
-    # active = models.BooleanField(choices=ACTIVE_CHOICES)
-    # desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE ,related_name='CowDesease')
-    # medicine = models.ForeignKey(MasterMedicin, on_delete=models.CASCADE ,related_name='CowMedicine')
-    # vaccine 
+
+

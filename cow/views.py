@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime
 
 def cow_registration(request):
     if request.method == 'POST':
@@ -43,7 +44,8 @@ class CowRegistrationView(APIView):
         purchase_date_value = request.data.get('purchase_date')
         # whereas in model the purchase_date support date value like 2000-10-20(YYYY-MM-DD) so total leth of the data is 10 thats why i set condition 10==purchase value 
         if len(purchase_date_value) != 10:
-            request.data['purchase_date'] = None
+            current_date = datetime.now().strftime("%Y-%m-%d")
+            request.data['purchase_date'] = current_date
             purchase_date_value = request.data.get('purchase_date')
             print(purchase_date_value)
 
@@ -172,6 +174,8 @@ class CowProfile(APIView):
         try:
             cows = CowRegistration.objects.all()
             serializer = CowRegistrationSerializer(cows, many=True)
+            print(">>>>>>>>>>>>>>>>>>>>>>>")
+            print(serializer.data)
         except ObjectDoesNotExist:
         # Handle the exception here, and set a specific error message
             error_message = "The object does not exist."
