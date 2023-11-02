@@ -30,14 +30,22 @@ def cow_registration(request):
 
 class CowRegistrationView(APIView):
     def post(self, request, format=None):
+        print(request.data)
         allDesease = request.data.get('desease') 
         print(allDesease)
         serializer = CowRegistrationSerializer(data=request.data)
         age  = request.data.get('age')
         age = int(age)
         print("88888888888888888888888888888")
-        hstatus  = request.data.get('helth_status')
+        
+        # purchase date purchase_date_value
 
+        purchase_date_value = request.data.get('purchase_date')
+        # whereas in model the purchase_date support date value like 2000-10-20(YYYY-MM-DD) so total leth of the data is 10 thats why i set condition 10==purchase value 
+        if len(purchase_date_value) != 10:
+            request.data['purchase_date'] = None
+            purchase_date_value = request.data.get('purchase_date')
+            print(purchase_date_value)
 
         if serializer.is_valid():
             print("VALID")
@@ -53,11 +61,13 @@ class CowRegistrationView(APIView):
             # Handle Vaccine
             allVaccine = request.data.get('vaccine') 
             print(allVaccine)
+            
+            
            
 
             cow_registration = CowRegistration(
                 cattle_id=request.data.get('cattle_id'),
-                purchase_date=request.data.get('cattle_id'),
+                purchase_date=purchase_date_value,
                 
                 age=request.data.get('age'),
                 color=request.data.get('color'),
@@ -86,6 +96,17 @@ class CowRegistrationView(APIView):
             cow_registration.medicine.set(allMedicine)
             cow_registration.vaccine.set(allVaccine)
             print("SAVE HOISE")
+
+            if request.data.get('helth_status') == "Sick":
+                cow_id = request.data.get('helth_status')
+                sickCow = Sick_Cow(
+                    cow_id=cow_registration,
+                ) 
+                sickCow.save();
+                sickCow.cow_desease.set(allDesease)
+                print("Cow Sick Also done Complete")
+
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

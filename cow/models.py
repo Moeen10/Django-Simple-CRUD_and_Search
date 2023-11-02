@@ -104,12 +104,12 @@ class CowRegistration(models.Model):
     
 
     shed = models.ForeignKey(Shed_registration, on_delete=models.CASCADE ,related_name='CowRegistration',default=1)
-    purchase_date = models.DateField(null=True)
-    cattle_id = models.CharField(max_length=10, unique=True)
+    purchase_date = models.DateField( null=True)
+    cattle_id = models.CharField(max_length=10)
     origin = models.CharField(max_length=10,)
     gender = models.CharField(max_length=10,)
     age = models.PositiveIntegerField()
-    date_of_birth = models.DateField(null=True)
+    date_of_birth = models.DateField(default=timezone.now)
     color = models.CharField(max_length=50)
     breeding_rate = models.DecimalField(max_digits=4, decimal_places=2)
     weight = models.DecimalField(max_digits=5, decimal_places=2)
@@ -122,7 +122,7 @@ class CowRegistration(models.Model):
 
     helth_status = models.CharField(max_length=30, default="Natural", )
     current_vaccine_dose = models.DecimalField(max_digits=4, decimal_places=2 , default=0)
-    next_vaccine_dose = models.DateField(null=True)
+    next_vaccine_dose = models.DateField(default=timezone.now)
 
 
     provable_heat_date = models.DateField(default=timezone.now)
@@ -140,12 +140,16 @@ class CowRegistration(models.Model):
 
 
 class Sick_Cow(models.Model):
-    cow_desease = models.ForeignKey(MasterDesease,on_delete=models.PROTECT , related_name='SickCowDesease')
-    cow_id = models.ForeignKey(CowRegistration, on_delete=models.PROTECT , related_name='SeickCowID' )
+    # cow_desease = models.ForeignKey(MasterDesease,on_delete=models.PROTECT , related_name='SickCowDesease')
+    cow_desease = models.ManyToManyField(MasterDesease ,related_name='SickCowDesease' ,blank=True )
+    cow_id = models.ForeignKey(CowRegistration, on_delete=models.CASCADE , related_name='SeickCowID')
 
 
     def __str__(self):
         return f"Sick Cow Id : {self.cow_id} ans Desease is : {self.cow_desease.desease_name}"
+    
+    class Meta:
+        db_table = 'sick_table'
 
 
 
