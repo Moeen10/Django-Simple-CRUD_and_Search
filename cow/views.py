@@ -29,6 +29,10 @@ def cow_registration(request):
 
 
 
+# FOR MOBILE
+
+#COW Registration / POST
+
 class CowRegistrationView(APIView):
     def post(self, request, format=None):
         print(request.data)
@@ -43,11 +47,11 @@ class CowRegistrationView(APIView):
 
         purchase_date_value = request.data.get('purchase_date')
         # whereas in model the purchase_date support date value like 2000-10-20(YYYY-MM-DD) so total leth of the data is 10 thats why i set condition 10==purchase value 
-        if len(purchase_date_value) != 10:
-            current_date = datetime.now().strftime("%Y-%m-%d")
-            request.data['purchase_date'] = current_date
-            purchase_date_value = request.data.get('purchase_date')
-            print(purchase_date_value)
+        
+        current_date = datetime.now().strftime("%Y-%m-%d")
+        request.data['purchase_date'] = current_date
+        purchase_date_value = request.data.get('purchase_date')
+        print(purchase_date_value)
 
         if serializer.is_valid():
             print("VALID")
@@ -112,18 +116,87 @@ class CowRegistrationView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#COW Profile Page Show / GET
+
+class CowProfile(APIView):
+    def get(self, request):
+        try:
+            cows = CowRegistration.objects.all()
+            serializer = CowShowSerializer(cows, many=True)
+          
 
 
 
 
+        except ObjectDoesNotExist:
+        # Handle the exception here, and set a specific error message
+            error_message = "The object does not exist."
+            return HttpResponse(error_message, status=404)  # 404 Not Found
+        except Exception as e:
+        # Handle other exceptions as needed, and set appropriate status code and message
+            error_message = "An error occurred: " + str(e)
+            return HttpResponse(error_message, status=500) 
+        
+            
+        return Response(serializer.data, status=status.HTTP_200_OK)
+  
+#COW Profile Update / PUT
 
+class CowUpdate(APIView):
+    def put(self, request):
+        cow_id =request.data.get('id')
+        
+    # Disease Id found from name
+        deseaseList = request.data['desease']
+        disease_ids = []
+        for disease_name in deseaseList:
+            try:
+                disease = MasterDesease.objects.get(desease_name=disease_name)
+                disease_ids.append(disease.id)
+            except MasterDesease.DoesNotExist:
+                pass
+        print(disease_ids)
 
-# def allCow(request):
-#     allCowList = CowRegistration.objects.all() 
-#     serializer = AllCowSerializer(allCowList, many = True)
+    # Medicine Id found from name
+        medicineList = request.data['medicine']
+        medicine_ids = []
+        for medicine_name in medicineList:
+            try:
+                medicine = MasterMedicin.objects.get(medicine_name=medicine_name)
+                medicine_ids.append(medicine.id)
+            except MasterMedicin.DoesNotExist:
+                pass
+        print(medicine_ids)
 
-#     json_data = JSONRenderer().render(serializer.data)
-#     return HttpResponse(json_data, content_type = 'application/json')
+    # VACCIne Id found from name
+        vaccineList = request.data['vaccine']
+        vaccine_ids = []
+        for vaccine_name in vaccineList:
+            try:
+                vaccine = MasterVaccine.objects.get(vaccine_name=vaccine_name)
+                vaccine_ids.append(vaccine.id)
+            except MasterVaccine.DoesNotExist:
+                pass
+        
+        print(vaccine_ids)
+        
+        request.data['vaccine'] = vaccine_ids
+        request.data['medicine'] = medicine_ids
+        request.data['desease'] = disease_ids
+        data= request.data
+        try:
+            cow = CowRegistration.objects.get(id=cow_id)
+        except CowRegistration.DoesNotExist:
+            return Response({"error": "Cow not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = CowRegistrationSerializer(cow, data=data, partial=True)  # Use the serializer with the existing instance (cow)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": f"Update Sucessfully"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"message": f"Update Failed"}, status=status.HTTP_400_BAD_REQUEST)
+        
+  
 
 
 class MasterDeseaseList(APIView):
@@ -141,8 +214,6 @@ class MasterDeseaseList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
-    
 class MasterVaccineList(APIView):
     def get(self, request):
         vaccines = MasterVaccine.objects.all()
@@ -158,7 +229,6 @@ class MasterVaccineList(APIView):
     #         return Response(serializer.data, status=status.HTTP_201_CREATED)
     #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class MasterMedicineList(APIView):
     def get(self, request):
         medicine = MasterMedicin.objects.all()
@@ -168,24 +238,4 @@ class MasterMedicineList(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
  
 
-
-class CowProfile(APIView):
-    def get(self, request):
-        try:
-            cows = CowRegistration.objects.all()
-            serializer = CowRegistrationSerializer(cows, many=True)
-            print(">>>>>>>>>>>>>>>>>>>>>>>")
-            print(serializer.data)
-        except ObjectDoesNotExist:
-        # Handle the exception here, and set a specific error message
-            error_message = "The object does not exist."
-            return HttpResponse(error_message, status=404)  # 404 Not Found
-        except Exception as e:
-        # Handle other exceptions as needed, and set appropriate status code and message
-            error_message = "An error occurred: " + str(e)
-            return HttpResponse(error_message, status=500) 
-        
-            
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        
-
+      

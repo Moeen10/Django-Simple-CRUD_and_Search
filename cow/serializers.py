@@ -38,12 +38,34 @@ class DisplayAllCowSerializer(serializers.ModelSerializer):
 class CowRegistrationSerializer(serializers.ModelSerializer):
     
     # desease_name = serializers.ListSerializer(child=serializers.CharField())
-    desease = serializers.StringRelatedField(many=True)
-    medicine = serializers.StringRelatedField(many=True)
-    vaccine = serializers.StringRelatedField(many=True)
+    desease = serializers.PrimaryKeyRelatedField(many=True, queryset=MasterDesease.objects.all())
+    medicine = serializers.PrimaryKeyRelatedField(many=True, queryset=MasterMedicin.objects.all())
+    vaccine = serializers.PrimaryKeyRelatedField(many=True, queryset=MasterVaccine.objects.all())
+
     class Meta:
         model = CowRegistration
         fields = '__all__'
 
 
+class CowShowSerializer(serializers.ModelSerializer):
+    
+    # desease_name = serializers.ListSerializer(child=serializers.CharField())
+    desease = serializers.StringRelatedField(many=True)
+    medicine = serializers.StringRelatedField(many=True)
+    vaccine = serializers.StringRelatedField(many=True)
 
+    class Meta:
+        model = CowRegistration
+        fields = '__all__'
+        
+
+
+# class CowUpdateSerializer(serializers.ModelSerializer):
+#     # Use PrimaryKeyRelatedField for related fields to support write operations.
+#     desease = serializers.PrimaryKeyRelatedField(many=True, queryset=MasterDesease.objects.all())
+#     medicine = serializers.PrimaryKeyRelatedField(many=True, queryset=MasterMedicin.objects.all())
+#     vaccine = serializers.PrimaryKeyRelatedField(many=True, queryset=MasterVaccine.objects.all())
+
+#     class Meta:
+#         model = CowRegistration
+#         fields = '__all__'

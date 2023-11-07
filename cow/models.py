@@ -19,8 +19,6 @@ class MasterDesease(models.Model):
     class Meta:
         db_table = 'm_desease'
 
-
-
 class MasterMedicin(models.Model):
     desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE)
     medicine_name = models.CharField(max_length=100)
@@ -36,7 +34,6 @@ class MasterMedicin(models.Model):
     
     class Meta:
         db_table = 'm_medicine'
-
 
 class MasterVaccine(models.Model):
     desease = models.ForeignKey(MasterDesease, on_delete=models.CASCADE)
