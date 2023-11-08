@@ -38,9 +38,12 @@ class CowRegistrationView(APIView):
         print(request.data)
         allDesease = request.data.get('desease') 
         print(allDesease)
-        serializer = CowRegistrationSerializer(data=request.data)
-        age  = request.data.get('age')
-        age = int(age)
+        try:
+            serializer = CowRegistrationSerializer(data=request.data)
+            age  = request.data.get('age')
+            age = int(age)
+        except:
+            return Response({"message": f"Insert Valid Data"}, status=status.HTTP_400_BAD_REQUEST)
         print("88888888888888888888888888888")
         
         # purchase date purchase_date_value
@@ -67,42 +70,45 @@ class CowRegistrationView(APIView):
             # Handle Vaccine
             allVaccine = request.data.get('vaccine') 
             print(allVaccine)
-            
-            
-           
+    
+       
+            try:
+                print("1........555555555555555555555555555555555")
+                cow_registration = CowRegistration(
+                    cattle_id=request.data.get('cattle_id'),
+                    purchase_date=purchase_date_value,
+                    
+                    age=request.data.get('age'),
+                    color=request.data.get('color'),
+                    date_of_birth = request.data.get('date_of_birth'),
+                    breeding_rate = int(request.data.get('breeding_rate')),
+                    weight = Decimal(request.data.get('weight')),
+                    milk_yield = Decimal(request.data.get('milk_yield')),
+                    active = True,
+                    origin = request.data.get('origin'),
+                    gender = request.data.get('gender'),
+                    helth_status = request.data.get('helth_status'),
+                    provable_heat_date = request.data.get('provable_heat_date'),
+                    heat_status = request.data.get('heat_status'),
+                    actual_heat_date = request.data.get('actual_heat_date'),
+                    semen_push_status = request.data.get('semen_push_status'),
+                    pregnant_date = request.data.get('pregnant_date'),
+                    delivery_status = request.data.get('delivery_status'),
+                    delivery_date = request.data.get('delivery_date'),
+                    # Add more fields as needed
+                )
+                # Save the instance to the database
 
-            cow_registration = CowRegistration(
-                cattle_id=request.data.get('cattle_id'),
-                purchase_date=purchase_date_value,
-                
-                age=request.data.get('age'),
-                color=request.data.get('color'),
-                date_of_birth = request.data.get('date_of_birth'),
-                breeding_rate = int(request.data.get('breeding_rate')),
-                weight = Decimal(request.data.get('weight')),
-                milk_yield = Decimal(request.data.get('milk_yield')),
-                active = True,
-                origin = request.data.get('origin'),
-                gender = request.data.get('gender'),
-                helth_status = request.data.get('helth_status'),
-                provable_heat_date = request.data.get('provable_heat_date'),
-                heat_status = request.data.get('heat_status'),
-                actual_heat_date = request.data.get('actual_heat_date'),
-                semen_push_status = request.data.get('semen_push_status'),
-                pregnant_date = request.data.get('pregnant_date'),
-                delivery_status = request.data.get('delivery_status'),
-                delivery_date = request.data.get('delivery_date'),
-                # Add more fields as needed
-            )
-            # Save the instance to the database
-
-            cow_registration.save()
-            print("KIRRRRRRRRRRRR")
-            cow_registration.desease.set(allDesease)
-            cow_registration.medicine.set(allMedicine)
-            cow_registration.vaccine.set(allVaccine)
-            print("SAVE HOISE")
-
+                cow_registration.save()
+                print("KIRRRRRRRRRRRR")
+                cow_registration.desease.set(allDesease)
+                cow_registration.medicine.set(allMedicine)
+                cow_registration.vaccine.set(allVaccine)
+                print("SAVE HOISE")
+            except:
+                print("2........555555555555555555555555555555555")
+                return Response({"message": f"Object Create Failed"},status=status.HTTP_400_BAD_REQUEST)
+            print("3........555555555555555555555555555555555")
             if request.data.get('helth_status') == "Sick":
                 cow_id = request.data.get('helth_status')
                 sickCow = Sick_Cow(
@@ -114,7 +120,7 @@ class CowRegistrationView(APIView):
 
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Registration Failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 #COW Profile Page Show / GET
 

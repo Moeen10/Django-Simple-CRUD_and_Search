@@ -54,6 +54,7 @@ class CowShowSerializer(serializers.ModelSerializer):
     medicine = serializers.StringRelatedField(many=True)
     vaccine = serializers.StringRelatedField(many=True)
 
+
     class Meta:
         model = CowRegistration
         fields = '__all__'
