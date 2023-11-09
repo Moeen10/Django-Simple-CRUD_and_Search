@@ -61,12 +61,7 @@ class CowShowSerializer(serializers.ModelSerializer):
         
 
 
-# class CowUpdateSerializer(serializers.ModelSerializer):
-#     # Use PrimaryKeyRelatedField for related fields to support write operations.
-#     desease = serializers.PrimaryKeyRelatedField(many=True, queryset=MasterDesease.objects.all())
-#     medicine = serializers.PrimaryKeyRelatedField(many=True, queryset=MasterMedicin.objects.all())
-#     vaccine = serializers.PrimaryKeyRelatedField(many=True, queryset=MasterVaccine.objects.all())
-
-#     class Meta:
-#         model = CowRegistration
-#         fields = '__all__'
+class MilkYieldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MilkYield
+        fields = '__all__'

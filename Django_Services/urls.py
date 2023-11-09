@@ -55,6 +55,11 @@ urlpatterns = [
     path('allvaccine/', MasterVaccineList.as_view(), name = "allvaccine"),
     path('allmedicine/', MasterMedicineList.as_view(), name = "allmedicine"),
     path('postCow/', CowRegistrationView.as_view(), name = "postCow"),
+
+
+#     COw Milk
+    path('postMilk/', MilkPost.as_view(), name = "MilkPost"),
+    path('getMilk/', MilkPost.as_view(), name = "MilkGet"),
 ]
 
 

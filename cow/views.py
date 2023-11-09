@@ -151,9 +151,13 @@ class CowProfile(APIView):
 class CowUpdate(APIView):
     def put(self, request):
         cow_id =request.data.get('id')
+
+        
         
     # Disease Id found from name
         deseaseList = request.data['desease']
+        print("^^^^^^^^^^^^^^^^^^^^^^")
+        print(deseaseList)
         disease_ids = []
         for disease_name in deseaseList:
             try:
@@ -161,7 +165,6 @@ class CowUpdate(APIView):
                 disease_ids.append(disease.id)
             except MasterDesease.DoesNotExist:
                 pass
-        print(disease_ids)
 
     # Medicine Id found from name
         medicineList = request.data['medicine']
@@ -172,7 +175,6 @@ class CowUpdate(APIView):
                 medicine_ids.append(medicine.id)
             except MasterMedicin.DoesNotExist:
                 pass
-        print(medicine_ids)
 
     # VACCIne Id found from name
         vaccineList = request.data['vaccine']
@@ -184,7 +186,6 @@ class CowUpdate(APIView):
             except MasterVaccine.DoesNotExist:
                 pass
         
-        print(vaccine_ids)
         
         request.data['vaccine'] = vaccine_ids
         request.data['medicine'] = medicine_ids
@@ -193,16 +194,38 @@ class CowUpdate(APIView):
         try:
             cow = CowRegistration.objects.get(id=cow_id)
         except CowRegistration.DoesNotExist:
-            return Response({"error": "Cow not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "Cow not found"}, status=status.HTTP_404_NOT_FOUND)
+        if request.data['helth_status']=="Good":
+                request.data['vaccine'] = []
+                request.data['medicine'] = []
+                request.data['desease'] = []
 
         serializer = CowRegistrationSerializer(cow, data=data, partial=True)  # Use the serializer with the existing instance (cow)
         if serializer.is_valid():
+            print("OK OK OK OK OK")
             serializer.save()
             return Response({"message": f"Update Sucessfully"}, status=status.HTTP_200_OK)
         else:
             return Response({"message": f"Update Failed"}, status=status.HTTP_400_BAD_REQUEST)
         
-  
+class MilkPost(APIView):
+ 
+ def post(self, request, format=None):
+        try:
+            serializer = MilkYieldSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message": "Post Successfully"}, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"message": "Insert Valid Data"}, status=status.HTTP_400_BAD_REQUEST)
+ 
+ def get(self, request):
+        allCowsMilkYield = MilkYield.objects.all()
+        print("de", allCowsMilkYield)
+        serializer = MilkYieldSerializer(allCowsMilkYield, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class MasterDeseaseList(APIView):

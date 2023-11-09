@@ -158,3 +158,6 @@ class MilkYield(models.Model):
 
         def __str__(self):
             return f"{self.cow.cattle_id} - {self.date} - {self.milk_produced} liters"
+        
+        class Meta:
+            db_table = 'milk_table'
