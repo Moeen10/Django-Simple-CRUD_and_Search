@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
+from django.shortcuts import get_object_or_404
 
 def cow_registration(request):
     if request.method == 'POST':
@@ -223,12 +224,35 @@ class MilkPost(APIView):
  
  def get(self, request):
         allCowsMilkYield = MilkYield.objects.all()
-        print("de", allCowsMilkYield)
+        # print("de", allCowsMilkYield)
         serializer = MilkYieldSerializer(allCowsMilkYield, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+ 
+
+ def put(self, request):
+     id = request.data.get('id')
+     date = request.data.get('date')
+     milk = request.data.get('milk_produced')
+     cow = request.data.get('cow')
+
+     print(date)
+     try:
+        milk_yield_instance = get_object_or_404(MilkYield, date=date, id=id)
+     except MilkYield.DoesNotExist:
+        return Response({"message": "MilkYield not found"}, status=status.HTTP_404_NOT_FOUND)
+
+     data =request.data
+     serializer = MilkYieldSerializer(milk_yield_instance, data=data, partial=True)
+     if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Update Successfully"}, status=status.HTTP_200_OK)
+     else:
+        return Response({"message": "Update Failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class MasterDeseaseList(APIView):
+    
     def get(self, request):
         deseases = MasterDesease.objects.all()
         print("de", deseases)

@@ -161,3 +161,4 @@ class MilkYield(models.Model):
         
         class Meta:
             db_table = 'milk_table'
+            unique_together = ('date', 'cow')
