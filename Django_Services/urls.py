@@ -62,6 +62,7 @@ urlpatterns = [
     path('getMilk/', MilkPost.as_view(), name = "MilkGet"),
     # path('getMilk/<int:cow_id>/', MilkPost.as_view(), name = "MilkGet"),
     path('updateMilk/', MilkPost.as_view(), name = "UpdateMilk"),
+    path('milk-post/<int:cow_id>/', MilkPost.as_view(), name='milk_post'),
 ]
 
 

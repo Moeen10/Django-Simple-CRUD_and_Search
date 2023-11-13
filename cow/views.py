@@ -222,12 +222,24 @@ class MilkPost(APIView):
         except Exception as e:
             return Response({"message": "Insert Valid Data"}, status=status.HTTP_400_BAD_REQUEST)
  
- def get(self, request):
-        allCowsMilkYield = MilkYield.objects.all()
-        # print("de", allCowsMilkYield)
-        serializer = MilkYieldSerializer(allCowsMilkYield, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#  def get(self, request):
+#         allCowsMilkYield = MilkYield.objects.all()
+#         # print("de", allCowsMilkYield)
+#         serializer = MilkYieldSerializer(allCowsMilkYield, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
  
+ def get(self, request,cow_id):
+        try:
+            milk_yields = MilkYield.objects.filter(cow_id=cow_id)
+            serializer = MilkYieldSerializer(milk_yields, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except MilkYield.DoesNotExist:
+            return Response({'error': f'Milk yield records for cow with id {cow_id} not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
 
  def put(self, request):
      id = request.data.get('id')
