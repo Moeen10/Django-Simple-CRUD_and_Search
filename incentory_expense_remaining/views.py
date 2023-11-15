@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect,HttpResponse
 from .models import Inventory, MasterInventory, RemainingInventory
-from .serializers import InventorySerializer
+from .serializers import InventorySerializer, MasterInventorySerializer
 from rest_framework.renderers import JSONRenderer
 from django.contrib.auth.decorators import login_required
-
-def inventory_list(request):
-    inventories = Inventory.objects.all()
-    return render(request, 'inventory_list.html', {'inventories': inventories})
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+import json
 
 
 @login_required(login_url='/login/')
@@ -121,3 +121,39 @@ def allAddInventory(request):
 
     json_data = JSONRenderer().render(serializer.data)
     return HttpResponse(json_data, content_type = 'application/json')
+
+
+    
+class Crop(APIView):
+    def get(self, request):
+        try:
+            crops = MasterInventory.objects.all()
+            serializer = MasterInventorySerializer(crops, many=True)
+            # crop_names = [crop_data['name'] for crop_data in serializer.data]
+            # print(crop_names)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            # Handle any unexpected exceptions
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except MasterInventory.DoesNotExist:
+            # Handle specific exception for MasterInventory objects not found
+            return Response({'message': 'No crop types found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            # Handle any remaining exceptions
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    def post(self,request):
+        print(request.data["crop_type"]);
+        print(request.data["quantity"]);
+        
+        try:
+            print(request.data)
+            # serializer = MasterInventorySerializer(data=request.data)
+            # if serializer.is_valid():
+            #     serializer.save()
+            return Response({"message": "Post Successfully"}, status=status.HTTP_201_CREATED)
+            # else:
+            #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"message": "Insert Valid Data"}, status=status.HTTP_400_BAD_REQUEST)
+     

@@ -43,8 +43,10 @@ urlpatterns = [
 
     path('inventory_add/', inventory_add, name = "inventory_add"),
     path('allAddInventory/', allAddInventory, name = "allAddInventory"),
-    path('inventory_list/', inventory_list, name = "inventory_list"),
+    path('inventory_list/', Crop.as_view(), name = "inventory_list"),
+    path('inventory_expense/', Crop.as_view(), name = "inventory_expense"),
     path('remaining_inventory_list/', remaining_inventory_list, name = "remaining_inventory_list"),
+
 
 #    Test er jonno use kora hoise hudai ignore it 
     path('asche/', FormDataView.as_view(), name = "remaining_inventory_list"),
