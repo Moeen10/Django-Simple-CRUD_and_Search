@@ -116,10 +116,12 @@ def remaining_inventory_list(request):
 
 
 def allAddInventory(request):
-    inventoryList = Inventory.objects.filter(add_or_remove="Add") 
+    inventoryList = Inventory.objects.all()
+    # inventoryList = Inventory.objects.filter(add_or_remove="Add") 
     serializer = InventorySerializer(inventoryList, many = True)
 
     json_data = JSONRenderer().render(serializer.data)
+    print(json_data)
     return HttpResponse(json_data, content_type = 'application/json')
 
 
@@ -142,18 +144,49 @@ class Crop(APIView):
             # Handle any remaining exceptions
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-    def post(self,request):
-        print(request.data["crop_type"]);
-        print(request.data["quantity"]);
-        
+    def post(self, request):
+        crop_type = request.data.get('crop_type')
+        crop_Quantity = request.data.get('quantity')
+        crop_id = MasterInventory.objects.get(name=crop_type)
+        print(crop_id.unit_price)
+        print(crop_id)
         try:
-            print(request.data)
-            # serializer = MasterInventorySerializer(data=request.data)
-            # if serializer.is_valid():
-            #     serializer.save()
+
+            new_inventory_record = Inventory(
+                crop_type=crop_id,  
+                add_or_remove='Remove',  
+                crop_price_per_kg=crop_id.unit_price,  
+                crop_quantity=crop_Quantity,  
+                total_crops=100,  
+              
+            )   
+            new_inventory_record.save()
             return Response({"message": "Post Successfully"}, status=status.HTTP_201_CREATED)
-            # else:
-            #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         except Exception as e:
             return Response({"message": "Insert Valid Data"}, status=status.HTTP_400_BAD_REQUEST)
-     
+        
+
+class AddInventory(APIView):  
+    def post(self, request):
+        crop_type = request.data.get('crop_type')
+        crop_Quantity = request.data.get('quantity')
+        crop_price_per_kg = request.data.get('amount')
+        crop_id = MasterInventory.objects.get(name=crop_type)
+        print(crop_id.unit_price)
+        print(crop_price_per_kg)
+        print(crop_id)
+        try:
+
+            new_inventory_record = Inventory(
+                crop_type=crop_id,  
+                add_or_remove='Add',  
+                crop_price_per_kg=crop_price_per_kg,  
+                crop_quantity=crop_Quantity,  
+                total_crops=100,  
+            )   
+            new_inventory_record.save()
+            return Response({"message": "Post Successfully"}, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            return Response({"message": "Insert Valid Data"}, status=status.HTTP_400_BAD_REQUEST)

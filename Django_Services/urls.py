@@ -41,7 +41,8 @@ urlpatterns = [
 
 #    Inventory related apis
 
-    path('inventory_add/', inventory_add, name = "inventory_add"),
+    # path('inventory_add/', inventory_add, name = "inventory_add"),
+    path('inventory_add/', AddInventory.as_view(), name = "inventory_add"),
     path('allAddInventory/', allAddInventory, name = "allAddInventory"),
     path('inventory_list/', Crop.as_view(), name = "inventory_list"),
     path('inventory_expense/', Crop.as_view(), name = "inventory_expense"),

@@ -247,7 +247,10 @@ class MilkPost(APIView):
      milk = request.data.get('milk_produced')
      cow = request.data.get('cow')
 
-     print(date)
+     print("HHHHHHHHHEEEEEEEEEEELLLLLLLLL")
+     print(id)
+     print(cow)
+     print(milk)
      try:
         milk_yield_instance = get_object_or_404(MilkYield, date=date, id=id)
      except MilkYield.DoesNotExist:
